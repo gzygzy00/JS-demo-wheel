@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sticky</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    .sticky {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    /*-----------------------------------*/
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    #topbar {
+      height: 60px;
+      border: 1px solid saddlebrown;
+      text-align: center;
+      background-color: saddlebrown;
+      color: #FFF;
+      opacity: 0.5;
+    }
+
+    #topbar.sticky {
+      width: 100%;
+    }
+
+    main {
+      height: 1600px;
+    }
+
+    .button-wrap {
+      display: flex;
+      padding: 10px;
+    }
+    button{
+      padding: 10px;
+      margin: 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div id="topbar">topbar</div>
+
+<main>main
+  <p>段落1</p>
+  <p>段落2</p>
+  <p>段落3</p>
+  <p>段落4</p>
+  <p>段落5</p>
+  <p>段落6</p>
+  <p>段落7</p>
+  <p>段落8</p>
+  <p>段落9</p>
+  <p>段落10</p>
+  <div class="button-wrap">
+    <button>button1</button>
+    <button>button2</button>
+  </div>
+  <p>段落11</p>
+  <p>段落12</p>
+</main>
+<script>
+  class Sticky {
+    constructor(selector, n) {
+      this.element = $(selector);
+      this.offset = n || 0;
+      this.cacheOffset();
+      this.addPlaceholder();
+      this.listenToScroll();
+    }
+
+    // 记录下一开始的 offset
+    cacheOffset() {
+      this.offsets = [];
+      this.element.each((index, elements) => {
+        this.offsets[index] = $(elements).offset();
+      });
+    }
+
+    // 占位，防止页面上的元素上移
+    addPlaceholder() {
+      this.element.each((index, elements) => {
+        $(elements).wrap(`<div class="stickyPlaceholder"></div>`);
+        $(elements).parent().height($(elements).outerHeight(true));
+      });
+    }
+
+    listenToScroll() {
+      $(window).on('scroll', () => {
+        const scrollY = window.scrollY;
+        this.element.each((index, elements) => {
+          const $elements = $(elements);
+          if (scrollY + this.offset > this.offsets[index].top) {
+            $elements.addClass('sticky').css('top', this.offset);
+          } else {
+            $elements.removeClass('sticky');
+          }
+        });
+      });
+    }
+  }
+
+  new Sticky('#topbar');
+  new Sticky('.button-wrap', 60);
+
+
+  // const buttonOffset = $('button').offset();
+  // $(window).on('scroll', () => {
+  //   const scrollY = window.scrollY;
+  //   if (scrollY > 0) {
+  //     $('#topbar').addClass('sticky');
+  //   } else {
+  //     $('#topbar').removeClass('sticky');
+  //   }
+  //
+  //   if (scrollY + 60 > buttonOffset.top) {
+  //     console.log(buttonHeight);
+  //     $('button').addClass('sticky');
+  //   } else {
+  //     $('button').removeClass('sticky');
+  //   }
+  // });
+</script>
+</body>
+</html>
