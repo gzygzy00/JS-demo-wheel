@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title>Dialog</title>
+  <style>
+
+  </style>
+</head>
+<body>
+<button id="btn">点我</button>
+
+<script>
+  class Dialog {
+    constructor(options) {
+      this.options = options;
+      this.init();
+    }
+
+    init() {
+      const {title, content, buttons} = this.options;
+      const $buttons = buttons.map((buttonOptions) => {
+        const $b = $(`<button></button>`);
+        $b.text(buttonOptions.text);
+        $b.on('click', buttonOptions.action);
+        return $b;
+      });
+      const template = `
+      <div class="newDialog">
+        <header>${title}</header>
+        <main>${content}</main>
+        <footer></footer>
+      </div>
+      `;
+      const $dialog = $(template);
+      $dialog.append($buttons);
+      this.$dialog = $dialog;
+      this.open();
+    }
+
+    open() {
+      this.$dialog.appendTo('body');
+    }
+
+    close() {
+      this.$dialog.detach();
+    }
+  }
+
+  btn.onclick = function () {
+    const dialog = new Dialog({
+      title: '你好',
+      content: 'this is Dialog',
+      buttons: [
+        {
+          text: '确定',
+          action() {
+            setTimeout(() => {
+              console.log('完成');
+            }, 1000);
+          }
+        },
+        {
+          text: '关闭',
+          action(){
+            dialog.close()
+          }
+        }]
+    });
+  };
+
+
+</script>
+</body>
+</html>
